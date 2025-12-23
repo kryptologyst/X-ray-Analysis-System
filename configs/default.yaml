@@ -1,0 +1,70 @@
+# Default configuration for X-ray analysis system
+data:
+  batch_size: 16
+  num_workers: 4
+  image_size: 224
+  num_channels: 3
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  augmentation: true
+  normalize: true
+  synthetic_data: true
+  data_path: "data/raw"
+  cache_dir: "data/processed"
+
+model:
+  architecture: "resnet18"  # resnet18, efficientnet_b0, vit_tiny
+  pretrained: true
+  num_classes: 2
+  dropout: 0.2
+  freeze_backbone: false
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+
+training:
+  epochs: 50
+  early_stopping_patience: 10
+  save_best: true
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  device: "auto"  # auto, cuda, mps, cpu
+  mixed_precision: true
+  gradient_clip: 1.0
+  scheduler: "cosine"  # cosine, step, plateau
+  loss_type: "cross_entropy"  # cross_entropy, focal, combined
+  use_class_weights: false
+  focal_gamma: 2.0
+  ce_weight: 1.0
+  focal_weight: 0.0
+  dice_weight: 0.0
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "auroc"
+    - "auprc"
+    - "sensitivity"
+    - "specificity"
+    - "ppv"
+    - "npv"
+    - "f1"
+    - "calibration"
+  threshold: 0.5
+  calibration_bins: 10
+  save_predictions: true
+  output_dir: "assets/evaluation"
+
+explainability:
+  methods:
+    - "gradcam"
+    - "scorecam"
+  save_visualizations: true
+  output_dir: "assets/explainability"
+  alpha: 0.4
+
+# Global settings
+seed: 42
+deterministic: true
+project_name: "xray_analysis"
+version: "1.0.0"
